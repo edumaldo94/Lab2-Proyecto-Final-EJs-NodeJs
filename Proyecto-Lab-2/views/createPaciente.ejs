@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Persona</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <%- include('imports/imports') %>
+</head>
+<body>
+    <header>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Registrar paciente', menu:false,tipoUser: rol})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4" id="datos-paciente">
+                    
+                        <div class="tContainer">
+                            <div class="r">
+                                <div class="c3">
+                    <form action="" id="frm-datos-paciente" class="f-column" method="">
+                
+                        <input type="text" name="nombre" placeholder="Nombre" id="nombre" required>
+                        <input type="text" name="apellido" placeholder="Apellido" id="apellido" required>
+                        <input type="number" name="dni" placeholder="DNI" id="dni">
+                        <input type="date" name="fecha_nacimient" placeholder="Fecha de Nacimiento" id="fecha_nacimient">
+                        <div class="sexSelect f-row">
+                            <label class="rad c2">
+                                <input type="radio" name="sexo" value="M"> Masculino
+                              </label>
+                            
+                              <label class="rad c2">
+                                <input type="radio" name="sexo" value="F" id="opFem"> Femenino
+                              </label>
+                        </div>
+                        <div id="CheckEmbarazada" class="oculto">
+                           <label >
+                                <input type="checkbox" name="embarazada" value="Embarazada" id="embarazada">
+                                embarazada
+                           </label>
+                        </div>
+                        <select name="provincia" id="provincia">
+                            <option >Seleccione una Provincia</option>
+                            <option value="Buenos Aires">Buenos Aires</option>
+                            <option value="Catamarca">Catamarca</option>
+                            <option value="Chaco">Chaco</option>
+                            <option value="Chubut">Chubut</option>
+                            <option value="Córdoba">Córdoba</option>
+                            <option value="Corrientes">Corrientes</option>
+                            <option value="Entre Ríos">Entre Ríos</option>
+                            <option value="Formosa">Formosa</option>
+                            <option value="Jujuy">Jujuy</option>
+                            <option value="La Pampa">La Pampa</option>
+                            <option value="La Rioja">La Rioja</option>
+                            <option value="Mendoza">Mendoza</option>
+                            <option value="Misiones">Misiones</option>
+                            <option value="Neuquén">Neuquén</option>
+                            <option value="Río Negro">Río Negro</option>
+                            <option value="Salta">Salta</option>
+                            <option value="San Juan">San Juan</option>
+                            <option value="San Luis">San Luis</option>
+                            <option value="Santa Cruz">Santa Cruz</option>
+                            <option value="Santa Fe">Santa Fe</option>
+                            <option value="Santiago del Estero">Santiago del Estero</option>
+                            <option value="Tierra del Fuego">Tierra del Fuego</option>
+                            <option value="Tucumán">Tucumán</option>
+                        </select>
+                        <input type="text" name="ciudad" placeholder="Ciudad" id="ciudad">
+                        <input type="text" name="direccion" placeholder="Dirección" id="direccion">
+                        <input type="text" name="tel" placeholder="Teléfono" id="tel">
+                        <input type="email" name="email" placeholder="Email" id="email">
+                        <button type="submit">Añadir</button>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+    
+</div>
+</div>
+</div>
+    </main>
+    
+    <input type="hidden" id="rol" value="<%=rol%>">
+    <footer>
+        <!-- Pie de página si es necesario -->
+    </footer>
+    <script type="module" src="/js/createPaciente.js"></script>
+
+</body>
+</html>

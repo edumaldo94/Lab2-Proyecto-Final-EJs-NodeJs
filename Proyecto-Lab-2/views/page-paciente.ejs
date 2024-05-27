@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Paciente</title>
+    <%- include('imports/imports') %>
+    <style>
+        #btnOrdTerminada:hover {
+            cursor: pointer;
+        }
+        .highlighted {
+            background-color: #f0f0f0; /* Color de fondo para resaltar */
+            border-radius: 5px; /* Añade esquinas redondeadas */
+            width: 500px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <%-include('parcial/nav',{logo:true,titulo:true, value:'Paciente', menu:true, tipoUser: 'Paciente'})%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="r">
+                    <div class="c3 f-row">
+                        <% for (let i = 0; i < examen.length; i++) { %>
+                            <% const e = examen[i]; %>
+                            <input type="hidden" id="id_examen" value="<%= e.id_examen %>">
+                            <input type="hidden" id="id_orden555" value="<%= e.id_orden %>">
+                        <% } %>
+                        <input type="hidden" id="dni" value="<%= persona.dni %>">
+                        <input type="hidden" id="rol" value="<%= rol %>">
+                        <input type="hidden" id="sexo" value="<%= persona.genero %>">
+                        <div class="highlighted">
+                            <span>Paciente</span>
+                            <h2><%= persona.nombre %> <%= persona.apellido %></h2>
+                            <h2><%= persona.dni %></h2>
+                            <h2><%= persona.email %></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="r">
+                <div class="c4 f-column">
+                    <div class="r">
+                        <div class="c1"><h2>Estudios Realizados</h2></div>
+                        <div class="c1"></div>
+                        <div class="c1"></div>
+                    </div>
+                    <% if (ordenes.length === 0) { %>
+                        <p>No hay órdenes disponibles.</p>
+                    <% } else { %>
+                        <% ordenes.forEach(o => { %>
+                            <!-- Aquí va el código para mostrar las órdenes -->
+                        <% }); %>
+                    <% } %>
+                    <% let cont = 0; %>
+                    <% let contExa = 0; %>
+                    <% ordenes.forEach(o => { %>
+                        <div class="r">
+                            <div class="ordenItem f-row" style="display: flex; justify-content: space-between;">
+                                <input type="hidden" id="idOrden" value="<%= o.id_orden %>">
+                                <span class="c1 r f-column">
+                                    <% if (resOrd[cont].ultimoCambio && o.id_orden === resOrd[cont].ultimoCambio.id_orden) { %>
+                                        <%= resOrd[cont].ultimoCambio.estado.nombre %>
+                                    <% } %>
+                                </span> 
+                                <span class="c1 r f-column">
+                                    <% examen.forEach(ex => { %>
+                                        <% if (o.id_orden === ex.id_orden) { %>
+                                            <input type="hidden" id="idOrdenExa_<%= o.id_orden %>" value="<%= ex.id_orden %>">
+                                            <input type="hidden" id="id_examen1_<%= o.id_orden %>" value="<%= ex.id_examen %>">
+                                            <% if (resOrd2[contExa].ultimoCambioExa.id_estado === 5) { %>
+                                                <div class="r"> <strong style="color: rgb(0, 0, 0);"><%= ex.analisis.descripcion %></strong></div>
+                                            <% } %>             
+                                        <% } %>  
+                                        <% contExa++; %>
+                                    <% }) %>
+                                </span> 
+                                <span class="c1 r f-column" id="fecha_entrega_<%= o.id_orden %>"><%= o.fecha_entrega %></span> 
+                                <span class="c1 r f-row" class="btnEtiqueta">
+                                    <button class="btnEtiqueta" value="<%= o.id_orden %>" style="width: 80px;">Ver</button> 
+                                </span>
+                            </div>
+                        </div>
+                        <% cont++; %>
+                        <% contExa = 0; %>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script type="module">
+        const formatDate = (dateString) => {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour12: false,
+            };
+            return new Date(dateString).toLocaleString('es-AR', options).replace(',', '');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ordenes = JSON.parse('<%- JSON.stringify(ordenes) %>');
+
+            ordenes.forEach(orden => {
+                const fechaEntregaElement = document.getElementById(`fecha_entrega_${orden.id_orden}`);
+                if (fechaEntregaElement && orden.fecha_entrega) {
+                    fechaEntregaElement.textContent = formatDate(orden.fecha_entrega);
+                }
+            });
+        });
+    </script>
+    <script type="module" src="/js/resultPaciente.js"></script>
+    <footer></footer>
+</body>
+</html>

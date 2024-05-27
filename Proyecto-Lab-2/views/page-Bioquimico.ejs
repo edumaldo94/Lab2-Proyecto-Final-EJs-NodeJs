@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports') %>
+    <title>Bioquimico</title>
+    <script src="/socket.io/socket.io.js"></script>
+<style>
+  body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 350px;
+            margin: 20px auto;
+            background-color: #e9e5e5;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .chat-header {
+            background-color: #0c9fb9;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            color: #4267b2;
+        }
+
+        .message-text {
+            background-color: #f2f2f2;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 5px;
+        }
+
+        .notification-countB {
+            position: absolute;
+            top: 8px;
+    left: 270px;
+      
+            background-color: #ff0000;
+            color: #fff;
+            border-radius: 50%;
+            padding: 0px 5px;
+   
+    
+}
+
+        .notification-icon {
+    position: relative;
+}
+
+</style>
+</head>
+<body>
+    <header> <%- include('parcial/nav',{logo:true,titulo:true, value: "Bioquimico: "+nombre+" "+" "+apellido, menu:true, tipoUser: rol}) %></header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c4 r">
+                    <h1 style="font-family: Arial, sans-serif; font-size: 35px; color: #0e0d0d; font-weight: normal;">Ordenes en estado Para Validar</h1>
+                </div>
+            </div>
+            <div class="r">
+               <div class="c4 f-column">  
+                <input type="hidden" id="rol" value="<%=rol%>">
+                <%
+                // Ordenar las órdenes por prioridad (las órdenes con prioridad primero)
+                ordenes.sort((a, b) => {
+                  if (a.dataValues.prioridad && !b.dataValues.prioridad) {
+                    return -1; // a tiene prioridad, debería venir antes
+                  } else if (!a.dataValues.prioridad && b.dataValues.prioridad) {
+                    return 1; // b tiene prioridad, debería venir antes
+                  } else {
+                    return 0; // ninguna tiene prioridad o ambas tienen, mantener el orden actual
+                  }
+                });
+                %>
+                <%
+                ordenes.forEach(o=>{
+                    %>
+                    <div class="r">
+                        <%if(o.dataValues.prioridad){%>
+                            <div class="ordenItem f-row"style="border: red solid;">
+                                  <%}else {%>  
+                                    <div class="ordenItem f-row">
+                                    <%}%>
+                            <span class="c1 f-column bg-lightBlue border-on2">
+                                <div class="r "><%= o.id_orden %></div>
+                                <div class="r "><%= o.dataValues.dni_persona %></div>
+                                <div class="r "><%= o.dataValues.genero_persona %></div>
+                                <div class="r"><h3><%= o.dataValues.nombre_persona +" "+ o.dataValues.apellido_persona %></h3></div>
+                          
+                            </span>
+                            <span class="c1 f-column">
+                                <div class="r"><%= o.dataValues.descripcion%></div>
+                                <div class="r"><%= o.dataValues.est %></div>
+                            </span>
+                            <span class="c1"><%=  o.fecha_creacion  %></span>
+                            <span class="c1 f-row">
+                                <a href="/determinacion/paraValidar/<%= o.dataValues.id_examen %>/<%= o.dataValues.genero_persona %>/<%= o.id_orden %>/<%=rol%>?nombre=<%= nombre %>&apellido=<%= apellido %>"><img src="/images/ver.png" alt=""></a>
+                              
+                            </span>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    <%
+                })
+            %>
+               </div>
+            </div>
+        </div>
+    </main>
+    <div class="chat-container" id="chatContainer">
+    <!--const {nombre, apellido} = req.query;-->
+        <div class="chat-header" onclick="toggleChat()">
+            Chat Laboratorio
+            <div class="notification-countB" id="notificationCountB">0</div>
+        </div>
+        <div class="chat-messages" id="chat"></div>
+        <div class="chat-input">
+            <input type="hidden" id="nombreInput" value="<%=nombre%>">
+            <input type="text" id="mensajeInput" placeholder="Mensaje">
+            
+        </div>
+        <button onclick="enviarMensaje()">Enviar</button>
+    </div>
+
+
+    <footer></footer>
+    <script>
+        var notificationCountB = 0; // Asegúrate de inicializar la variable notificationCountB
+    
+        function toggleChat() {
+            var chatContainer = document.getElementById('chatContainer');
+            if (chatContainer.style.transform === 'translateY(100%)') {
+                chatContainer.style.transform = 'translateY(0)';
+                notificationCountB = 0; // Restablece el contador de notificaciones
+                document.getElementById('notificationCountB').innerText = ''; // Limpia el texto del contador
+            } else {
+                chatContainer.style.transform = 'translateY(100%)';
+            }
+        }
+    
+        const socket = io();
+        socket.on('mensaje', (mensajeCompleto) => {
+            const nombreUsuario = document.getElementById('nombreInput').value;
+        const [nombreRemitente] = mensajeCompleto.split(':'); // Obtener el nombre del remitente del mensaje
+        if (nombreRemitente.trim() !== nombreUsuario.trim()) { // Verificar si el remitente es diferente al usuario actual
+            // Incrementa el contador de notificaciones solo si el remitente es diferente al usuario actual
+            notificationCountB++;
+            document.getElementById('notificationCountB').innerText = notificationCountB; // Actualiza el texto del contador
+        }});
+    
+        function enviarMensaje() {
+            const nombre = document.getElementById('nombreInput').value;
+            const mensaje = document.getElementById('mensajeInput').value;
+            const mensajeCompleto = `${nombre}: ${mensaje}`;
+            socket.emit('mensaje', mensajeCompleto);
+            document.getElementById('mensajeInput').value = '';
+        }
+    
+        socket.on('mensaje', (mensaje) => {
+            const chatDiv = document.getElementById('chat');
+            const mensajeDiv = document.createElement('div');
+    
+            mensajeDiv.textContent = mensaje;
+            chatDiv.appendChild(mensajeDiv);
+        });
+    </script>
+    
+</body>
+
+</html>

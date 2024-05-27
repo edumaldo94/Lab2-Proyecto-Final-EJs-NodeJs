@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('imports/imports')%>
+    <title></title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+
+body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            max-width: 350px;
+            margin: 20px auto;
+            background-color: #e9e5e5;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateY(100%);
+        }
+
+        .chat-header {
+            background-color: #0c9fb9;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+        }
+
+        .message-sender {
+            font-weight: bold;
+            color: #4267b2;
+        }
+
+        .message-text {
+            background-color: #f2f2f2;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-right: 5px;
+        }
+
+        .notification-countB {
+            position: absolute;
+            top: 8px;
+    left: 270px;
+      
+            background-color: #ff0000;
+            color: #fff;
+            border-radius: 50%;
+            padding: 0px 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,value:'Orden Nº: '+orden.id_orden+' '+rol,titulo:true,menu:true,tipoUser: rol })%>
+    </header>
+    <main>
+        <div class="tContainer">
+            <%let verificar= true;%>
+            <% for (let i = 0; i < examen.length; i++) { %>
+         
+                    <% const e = examen[i]; %>
+                    <% const m = muestras[i]; %>
+    
+                <%if(resOrd[i].ultimoCambio.id_estado === 3){%>
+                    <div class="r">
+                               <div class="c4 f-column border-on" style="background-color: rgb(240, 239, 239);">
+                                
+                                    <div class="r border-on">   
+                                      <%if(verificar){%>
+                                      
+                                       <div class="c2" style="width: auto;"> <h2>Nombre y apellido: <%= orden.pedido.persona.nombre + " "+ orden.pedido.persona.apellido%></h2>  </div>
+                                       <div class="c1" style="width: auto;"> <h2>DNI: <%= orden.pedido.persona.dni %></h2> </div>
+                                       <div class="c1" style="width: auto;"> <h2>Fecha de Inicio: <%= orden.fecha_creacion.toISOString().slice(0,10)   %> </h2></div>
+                                       <div class="c4" style="padding-left: 50px;"> <h2>Edad: <%= orden.pedido.persona.dataValues.edad %></h2> </div>
+                                      
+                                       <div class="c4" style=" display: flex; justify-content: space-between;"> 
+                                            <h2 style="padding-left: 45px; width: 350px;"> Estado de Orden: <%= ultimoCambioOrden.estado.nombre %></h2>
+                                        
+                                       
+                                       <%if(orden.prioridad){%>
+                                           <label 
+                                               style="color:white;font-size: 30px; background-color: brown; width: 300px; height: 35px;;text-align: center;border: 3px solid black; border-radius: 10px;">Pedido
+                                               URGENTE</label>
+                                           <%}%>
+                                               <h2 style="padding-right: 45px;">Fecha de Entrega: <%= orden.fecha_entrega.toISOString().slice(0,10)   %> </h2>
+                                   </div>
+                                   <%verificar= false;%>
+                                     <%}%>
+                                
+                                     <input type="hidden" id="cancelarOrden" value="<%=orden.estado%>">
+                                       <input type="hidden" id="idOrden" value="<%=orden.id_orden%>">
+                                       <input type="hidden" id="id_examen" value="<%=e.id_examen%>">
+                                       <input type="hidden" id="rol" value="<%=rol%>">
+                                       <input type="hidden" id="id_persona" value="<%= orden.pedido.persona.id_persona%>">
+                                       <input type="hidden"  id="dni" value="<%=orden.pedido.persona.dni%>">
+                                       <input type="hidden"  id="nombre_<%=e.id_examen %>" value="<%=orden.pedido.persona.nombre%>">
+                                       <input type="hidden"  id="apellido_<%=e.id_examen %>" value="<%=orden.pedido.persona.apellido%>">
+                                    
+                                   
+                                     </div>
+                  <input type="hidden"  id="analisis_<%=e.id_examen %>" value="<%=e.analisis.descripcion%>">
+                                           <input type="hidden"  id="ite" value="<%=i%>"> 
+                                   <div class="r">
+                                      <div class="c4 f-column">
+                                       <label style="font-size: 20px;">Análisis:
+                                           <h2> <%= e.analisis.descripcion %> </h2></label>
+                                        
+                                          <!--     <h3> Estado de Orden: <%= resOrd[i].ultimoCambio.estado.nombre %></h3>-->
+                                       
+                                           <label style="font-size: 20px;">Muestras:</label>
+                                           <ul style="list-style-type: none;">
+                                               <% muestras.forEach(m=>{
+                                                
+                                                   %>
+                                                      <%if(e.analisis.id_analisis === m.guia_muestra.id_analisis){%>
+                                                       
+                                                   <li class="<% if(!m.entregado){ %> t-red <% }%>" style="font-size: 20px;"> <h3><%= m.guia_muestra.g_descripcion %></h3></li>
+                                                    <%}%>
+                                                   <%
+               
+                                                 
+                                               })
+                                                   
+                                            %>
+                                              <!-- <% muestras.forEach(m=>{
+                                                   %>
+                                                       <li class="<% if(!m.entregado){ %>bg-orange<% }%>"> <%= m.guia_muestra.g_descripcion %></li>
+                                                   <%
+                                               })%>      -->
+                                           </ul>
+                                           
+                                      </div>
+                                   </div>
+                                   <div class="r border-on ">
+                                       <div class="c1">
+                                           <h3><strong>Análisis: </strong> </h3>
+                                           <ul style="list-style-type: none;">
+                                               <% examen.forEach(ex=>{%>
+                                                   
+                                                   <li> <%= ex.analisis.descripcion %> </li>
+                                              
+                                               <% }) %>
+                                           </ul>
+                                       </div>
+                                      
+                                       <div class="c1 f-column">
+                                       <% if(orden.estado){%>          
+                                          
+                                               
+                                                   <input type="hidden"  id="exalength" value="<%=e.id_examen %>"> 
+                                                   <button class="btnEtiqueta" value="<%=e.id_examen %>">Etiqueta</button> 
+                                     
+                                                   
+                                               
+                                       <%}else{%>
+               
+               <h3 style="text-align: center; background-color: rgba(231, 88, 88, 0.74); border-radius: 10px; border: solid rgb(228, 115, 115);">La orden fue cancelada, para realizar acciones se requiere su activación.</h3>
+                                           <%}%>
+               </div>
+                                        
+                                           
+                                       <div class="c1">
+                                           
+                                             
+                                         
+                                               <h3>Medico: </h3>
+                                          
+                                           <ul style="list-style-type: none;"> 
+                                              <li>Nombre:  
+                                              
+                                                  <%= orden.pedido.nombre_medico %>
+                                               </li>
+                                               <li>
+                                                 Matricula N°:   <%= orden.pedido.nro_matricula %>
+                                               </li>
+                                           </ul>
+                                           
+                                       </div>
+                                   </div>
+                                   
+                               </div>
+                           </div>
+            <div class="r">
+                <% if(rol == rol){
+                    %>
+                    <div class="c1"><button><a href="/registrar-valoresPreInfo/<%= e.id_examen %>/<%= orden.pedido.persona.genero %>?nombre=<%= nombre %>&apellido=<%= apellido %>">Registrar Valores</a></button></div>
+                    <div class="c1"><button id="btnParaValidar">Para validar</button></div>
+                   
+                    <%
+                }
+                if(rol=='bioquimico'){
+                    %>
+                    <div class="c1"><button>Validar</button></div>
+                    <div class="c1"><button>Verificssar</button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="c1"><button></button></div>
+                    <div class="chat-container" id="chatContainerTecnico">
+                        <div class="chat-header" onclick="toggleChat()">
+                            Chat Laboratorio
+                            <div class="notification-countB" id="notificationCountB">0</div>
+                        </div>
+                        <div class="chat-messages" id="chat"></div>
+                        <div class="chat-input">
+                            <input type="hidden" id="nombreInput" value="<%=nombre%>">
+                            <input type="hidden" id="apellidoInput" value="<%=apellido%>">
+                            <input type="text" id="mensajeInput" placeholder="Mensaje">
+                            
+                        </div>
+                        <button onclick="enviarMensaje()">Enviar</button>
+                    </div>
+                    <%
+                }
+                %>
+                
+            </div>
+            <% } %>
+            <% } %>
+        </div>
+    </main>
+    <%if (rol=='Tecnico'){%>
+        <div class="r c4" style="top:40px;">
+            <!--const {nombre, apellido} = req.query;-->
+                         <div class="chat-container" id="chatContainerTecnico" >
+                           <div class="chat-header" onclick="toggleChatTecnico()">
+                               Chat Laboratorio
+                               <div class="notification-countB" id="notificationCountTC">0</div>
+                           </div>
+                           <div class="chat-messages" id="chatT"></div>
+                           <div class="chat-input">
+                               <input type="hidden" id="nombreInputb" value="<%=nombre%>">
+                               <input type="text" id="mensajeInputb" placeholder="Mensaje">
+                               
+                           </div>
+                           <button onclick="enviarMensajeTc()">Enviar</button>
+                       </div>
+                       </div>
+                   </div>
+        <%}%>
+    <footer></footer>
+    <script type="module" src="/js/cambioEstadoParavalidar.js"></script>
+    <script>
+        var notificationCountB = 0; // Asegúrate de inicializar la variable notificationCountB
+    
+        function toggleChat() {
+            var chatContainer = document.getElementById('chatContainer');
+            if (chatContainer.style.transform === 'translateY(100%)') {
+                chatContainer.style.transform = 'translateY(0)';
+                notificationCountB = 0; // Restablece el contador de notificaciones
+                document.getElementById('notificationCountB').innerText = ''; // Limpia el texto del contador
+            } else {
+                chatContainer.style.transform = 'translateY(100%)';
+            }
+        }
+    
+        const socket = io();
+        socket.on('mensaje', (mensajeCompleto) => {
+            const nombreUsuario = document.getElementById('nombreInput').value;
+        const [nombreRemitente] = mensajeCompleto.split(':'); // Obtener el nombre del remitente del mensaje
+        if (nombreRemitente.trim() !== nombreUsuario.trim()) { // Verificar si el remitente es diferente al usuario actual
+            // Incrementa el contador de notificaciones solo si el remitente es diferente al usuario actual
+            notificationCountB++;
+            document.getElementById('notificationCountB').innerText = notificationCountB; // Actualiza el texto del contador
+        }});
+    
+        function enviarMensaje() {
+            const nombre = document.getElementById('nombreInput').value;
+            const mensaje = document.getElementById('mensajeInput').value;
+            const mensajeCompleto = `${nombre}: ${mensaje}`;
+            socket.emit('mensaje', mensajeCompleto);
+            document.getElementById('mensajeInput').value = '';
+        }
+    
+        socket.on('mensaje', (mensaje) => {
+            const chatDiv = document.getElementById('chat');
+            const mensajeDiv = document.createElement('div');
+    
+            mensajeDiv.textContent = mensaje;
+            chatDiv.appendChild(mensajeDiv);
+        });
+    </script>
+       <script>
+        var notificationCountTC = 0; // Asegúrate de inicializar la variable notificationCountB
+    
+        function toggleChatTecnico() {
+            var chatContainer = document.getElementById('chatContainerTecnico');
+            if (chatContainer.style.transform === 'translateY(100%)') {
+                chatContainer.style.transform = 'translateY(0)';
+                notificationCountTC = 0; // Restablece el contador de notificaciones
+                document.getElementById('notificationCountTC').innerText = ''; // Limpia el texto del contador
+            } else {
+                chatContainer.style.transform = 'translateY(100%)';
+            }
+        }
+    
+        const socketC = io();
+        socketC.on('mensaje', (mensajeCompleto) => {
+            const nombreUsuario = document.getElementById('nombreInputb').value;
+        const [nombreRemitente] = mensajeCompleto.split(':'); // Obtener el nombre del remitente del mensaje
+        if (nombreRemitente.trim() !== nombreUsuario.trim()) { // Verificar si el remitente es diferente al usuario actual
+            // Incrementa el contador de notificaciones solo si el remitente es diferente al usuario actual
+            notificationCountB++;
+            document.getElementById('notificationCountTC').innerText = notificationCountTC; // Actualiza el texto del contador
+        }});
+    
+        function enviarMensajeTc() {
+            const nombre = document.getElementById('nombreInputb').value;
+            const mensaje = document.getElementById('mensajeInputb').value;
+            const mensajeCompleto = `${nombre}: ${mensaje}`;
+            socket.emit('mensaje', mensajeCompleto);
+            document.getElementById('mensajeInputb').value = '';
+        }
+    
+        socketC.on('mensaje', (mensaje) => {
+            const chatDiv = document.getElementById('chatT');
+            const mensajeDiv = document.createElement('div');
+    
+            mensajeDiv.textContent = mensaje;
+            chatDiv.appendChild(mensajeDiv);
+        });
+    </script>
+</body>
+</html>

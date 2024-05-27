@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrativo</title>
+    <%- include('imports/imports.ejs') %>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav',{logo:true,titulo:true,value:'Administrador',menu:true, tipoUser: rol})  %>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="r">
+                <div class="c1 img-center">
+                    <img src="images/user-icon.png" alt="" class="logo-s center">
+                </div>
+            </div>
+            <div class="r">
+                <div class="c2 f-column">
+                    <input type="hidden" id="rol" value="<%=rol%>">
+                    <input type="hidden" id="nombreInput" value="<%=nombre%>">
+                    <input type="hidden" id="apellidoInput" value="<%=apellido%>">
+                    <input type="text" placeholder="Buscar por Documento" id="dni-paciente-search" pattern="[0-9]{8}" minlength="8" maxlength="8" required>
+
+                    <input type="email" placeholder="Buscar por Email" id="email-paciente-search" required>
+
+                    <button type="button" id="buscarPaciente">Buscar</button>
+
+                    <button type="click" id="listaPaciente">Lista de pacientes</button>
+                    <a class="enlace22" href="/persona/nueva/<%=rol%>?nombre=<%= nombre %>&apellido=<%= apellido %>" id="crearPersona">Crear Persona</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer></footer>
+    <script type="module" src="/js/script.js" defer></script>
+</body>
+</html>

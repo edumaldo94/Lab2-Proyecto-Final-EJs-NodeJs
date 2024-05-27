@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Persona</title>
+    <%- include('imports/imports') %>
+    <style>
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .form-container, .table-container {
+            width: 48%;
+        }
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: left;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <%- include('parcial/nav', { logo: true, titulo: true, value: 'Registrar paciente', menu: false }) %>
+    </header>
+    <main>
+        <div class="tContainer">
+            <div class="main-container">
+                <div class="form-container">
+                    <h1>Formulario de Usuario</h1>
+                    <form id="frm-crear-usuario">
+                        <label for="dni">DNI:</label>
+                        <input type="number" id="dni" name="dni"><br><br>
+                        <label for="clave">Clave:</label>
+                        <input type="password" id="clave" name="clave"><br><br>
+                        <label for="rol">Rol:</label><br>
+                        <select id="rol" style="width: 200px; font-size: 15px">
+                            <option selected disabled>Elegir un rol</option>
+                            <option value="Gerente">Gerente</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Tecnico">Técnico</option>
+                            <option value="Bioquimico">Bioquímico</option>
+                            <option value="Paciente">Paciente</option>
+                        </select><br><br><br><br><br><br>
+                        <button type="submit">Guardar Usuario</button>
+                    </form>
+                </div>
+                
+                <div class="table-container">
+                    <h2>Personas sin Usuario</h2>
+                    <div class="search-container">
+                        <label for="search">Buscar:</label>
+                        <input type="text" id="search" placeholder="Buscar...">
+                    </div>
+                    <table id="personas-sin-usuario">
+                        <thead>
+                            <tr>
+                                <th>Dni</th>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% personasSinUsuario.forEach(persona => { %>
+                                <tr>
+                                    <td><%= persona.dni %></td>
+                                    <td><%= persona.nombre %></td>
+                                    <td><%= persona.apellido %></td>
+                                    <td><%= persona.email %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+ 
+
+<div class="r c1"></div>
+    <script type="module" src="/js/usuarioLogin.js"></script>
+    <script>
+        document.getElementById('search').addEventListener('keyup', function() {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#personas-sin-usuario tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchValue));
+                row.style.display = match ? '' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,218 @@
+/*#datos-paciente{
+    min-height: 300px;
+    display: flex;
+    background-color: aquamarine;
+    
+}*/
+/* Estilo general */
+body {
+    background: url('../images/fondo-gral.jpg');
+    background-size: cover;
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+:root {
+    --main-color: #055582;
+    --secondary-color: #1db3d4;
+    --accent-color: #68c4e5;
+    --light-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #cccccc;
+    --button-bg: #1db3d4;
+    --button-hover-bg: #68c4e5;
+    --font-color: #222222;
+    --shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(90deg, var(--main-color) 5%, var(--secondary-color) 40%, var(--accent-color) 85%, white 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    z-index: 10;
+    box-shadow: var(--shadow);
+}
+
+header .logo-nav {
+    width: 120px;
+}
+
+header .c3 h1 {
+    font-size: 24px;
+    color: var(--font-color);
+    background-color: var(--light-bg);
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+
+header #menu-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+header #menu-nav ul li a {
+    text-decoration: none;
+    color: var(--font-color);
+    padding: 10px;
+    transition: color 0.3s, background-color 0.3s;
+}
+
+header #menu-nav ul li a:hover {
+    color: var(--main-color);
+    background-color: var(--light-bg);
+    border-radius: 5px;
+}
+
+/* Contenedor principal */
+main {
+    margin-top: 100px;
+    padding: 20px;
+}
+
+#datos-paciente {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+/* Formularios */
+#frm-datos-paciente {
+    width: 100%;
+}
+
+input[type="text"], input[type="number"], input[type="password"], input[type="date"], input[type="email"], select {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid var(--input-border);
+    outline: none;
+    box-shadow: var(--shadow);
+    font-size: 16px;
+    padding: 0 10px;
+    background-color: var(--input-bg);
+    margin-bottom: 15px;
+}
+
+button {
+    width: 100%;
+    height: 45px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: var(--shadow);
+    font-size: 16px;
+    background: var(--button-bg);
+    font-weight: bold;
+    color: white;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: var(--button-hover-bg);
+    cursor: pointer;
+}
+
+.enlace22 {
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    border-radius: 5px;
+    border: none;
+    box-shadow: var(--shadow);
+    font-size: 16px;
+    background: #399117;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+}
+
+.enlace22:hover {
+    background: #65a148;
+}
+
+/* Tabla de ordenes */
+.ordenItem {
+    width: 100%;
+    background: linear-gradient(90deg, var(--light-bg) 90%, var(--accent-color) 120%);
+    padding: 10px;
+    border-radius: 10px;
+    border: 3px solid var(--accent-color);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.ordenItem img {
+    width: 45px;
+    aspect-ratio: 1.5/1;
+}
+
+.itemAnalisis, .itemAnalisis2 {
+    gap: 2px;
+    min-width: 200px;
+    background-color: rgb(54, 160, 192);
+    color: var(--font-color);
+    padding: 0 2px;
+    margin: 2px 0;
+    border-radius: 5px;
+}
+
+.itemAnalisis .crossClose:hover, .itemAnalisis2 .crossCloseB:hover {
+    cursor: pointer;
+    color: orangered;
+}
+
+.muestraAnalisis, .muestraAnalisis2 {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.center {
+    margin: auto;
+}
+
+.oculto {
+    display: none;
+}
+
+.border-on {
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.border-on2 {
+    border-radius: 10px 0 0 10px;
+}
+
+.bg-orange {
+    background: orange;
+}
+
+.bg-lightBlue {
+    background: linear-gradient(90deg, var(--main-color) 1%, var(--secondary-color) 40%, var(--accent-color) 85%);
+}
+
+.t-red {
+    color: red;
+}
+

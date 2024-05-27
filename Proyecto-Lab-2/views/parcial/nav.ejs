@@ -1,0 +1,30 @@
+<div class="c1 f-row">
+	<% if(logo) {%>
+		<img src="/images/logotipo-chico.png" alt="" class="logo-nav">	
+		<a href="http://localhost:3030/"></a>
+	<%}%>
+	
+</div>
+<div class="c3 r" >
+	<%if(titulo){%>
+		<h1><%= value %></h1>
+	<%}%>
+	
+</div>
+<div class="c2 f-row" id="menu-nav">
+	<% if(menu){%>
+		<ul class="f-row">
+			<% if(tipoUser == 'Administrador'){
+				%>
+				<li class="nav-item"><a href="/page-Administrador">Buscar</a></li>
+				<% } %>
+				<li class="nav-item"><a href="/cerrar-sesion">Cerrar sesión</a></li>
+				
+			</a>
+			<a href="#">
+				<li></li>
+			</a>
+		</ul>
+	<%}%>
+	
+</div>
